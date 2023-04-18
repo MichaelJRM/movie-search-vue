@@ -3,9 +3,9 @@
         <div :style="isMobile ? `background-image: url('${movieDetails.Poster != 'N/A'? movieDetails.Poster : useImageAsset('default-movie-poster.jpg')}')` : ''"
              class="absolute bg-no-repeat bg-cover bottom-0 left-0 top-0 right-0 -z-10 blur-md">
         </div>
-        <div class="absolute right-0 top-0">
+        <div class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2">
             <button @click="$emit('close')">
-                <Icon name="ic:baseline-cancel" size="2em" style="transform: translate(50%, -50%); color: white"></Icon>
+                <Icon name="ic:baseline-cancel" size="2em" style="color: white"></Icon>
             </button>
         </div>
         <template v-if="movieDetails">

@@ -21,9 +21,8 @@
         >
             <MovieThumbnail v-for="(movie, index) in store.getMovies" :key="index" :movie="movie"/>
         </div>
-        <div v-if="store.getIsLoading" class="grid place-items-center absolute top-1/2 left-1/2 text-white"
-             style="transform: translate(-50%, 50%)"
-        >
+        <div v-if="store.getIsLoading"
+             class="grid place-items-center absolute top-1/2 left-1/2 text-white -translate-x-1/2 translate-y-1/2">
             <LoadingIndicator/>
         </div>
         <DialogError ref="dialogError"/>

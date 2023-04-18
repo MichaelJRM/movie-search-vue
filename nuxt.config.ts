@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      apiBase: 'http://www.omdbapi.com/',
+      apiBase: 'https://www.omdbapi.com/',
       apiKey: 'e22ec189',
     }
   },

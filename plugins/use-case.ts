@@ -1,16 +1,17 @@
-import MovieSearchUseCase from "~/models/movie/use-case/movie-search-use-case";
+import MovieSearchUseCase from '~/models/movie/use-case/movie-search-use-case';
 
 interface IUseCaseInstance {
-  movie: MovieSearchUseCase
+  movie: MovieSearchUseCase;
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
   const modules: IUseCaseInstance = {
+    // @ts-ignore
     movie: new MovieSearchUseCase(nuxtApp.$repository.movie),
-  }
+  };
   return {
     provide: {
       useCase: modules,
     }
-  }
+  };
 });

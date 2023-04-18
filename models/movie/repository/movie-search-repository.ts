@@ -1,22 +1,19 @@
-import MovieSearchApi from "~/models/movie/repository/api/movie-search-api";
-import {Paged} from "~/util/data/paged";
-import RepositoryApiResultHandler from "~/util/repository/error-handler";
-import {Result} from "~/util/data/result";
+import MovieSearchApi from '~/models/movie/repository/api/movie-search-api';
+import {Paged} from '~/util/data/paged';
+import RepositoryApiResultHandler from '~/util/repository/error-handler';
+import {Result} from '~/util/data/result';
 
 export default class MovieSearchRepository {
-  private api: MovieSearchApi;
-
-  constructor(api: MovieSearchApi) {
-    this.api = api;
+  constructor(private readonly api: MovieSearchApi) {
   }
 
-  async search(query: string, yearOfRelease: string | null, page: number): Promise<Result<Paged<MovieSearch>, any>> {
+  async search(query: string, yearOfRelease: string | null, page: number): Promise<Result<Paged<MovieSearch>>> {
     return RepositoryApiResultHandler.handle(async () => {
       return await this.api.search(query, yearOfRelease, page);
     });
   }
 
-  async getDetails(imdbID: string): Promise<Result<MovieDetails, any>> {
+  async getDetails(imdbID: string): Promise<Result<MovieDetails>> {
     return RepositoryApiResultHandler.handle(async () => {
       return await this.api.getDetails(imdbID);
     });

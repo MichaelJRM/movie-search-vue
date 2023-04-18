@@ -1,10 +1,9 @@
 <template>
     <Teleport to="body">
         <Transition name="slide-fade">
-
             <div v-if="isOpen"
                  class="modal fixed left-0 top-0 right-0 bottom-0 z-40 backdrop-blur-lg grid place-items-center"
-                 @click="emitCloseRequested"
+                 @click="$emit('closeRequested')"
                  @mouseover.stop
             >
                 <slot @click.stop></slot>
@@ -17,14 +16,9 @@
 const props = defineProps<{
   isOpen: boolean;
 }>();
-
-const emit = defineEmits([
-  'closeRequested',
-]);
-
-function emitCloseRequested() {
-  emit('closeRequested');
-}
+const emit = defineEmits<{
+  (e: 'closeRequested'): void;
+}>();
 </script>
 
 <style lang="scss" scoped>

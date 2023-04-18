@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // @ts-ignore
   runtimeConfig: {
     public: {
       apiBase: 'https://www.omdbapi.com/',
@@ -10,6 +11,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-icon',
     '@pinia/nuxt',
+    '@nuxtjs/device',
   ],
   imports: {
     dirs: ['./stores'],
@@ -18,9 +20,6 @@ export default defineNuxtConfig({
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
   css: [
-    "@/assets/style/main.scss",
+    '@/assets/style/main.scss',
   ],
-  alias: {
-    assets: '/<rootDir>/assets',
-  }
-})
+});

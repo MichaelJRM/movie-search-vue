@@ -1,17 +1,26 @@
-import {Result, ResultType} from "~/util/data/result";
+import {Result, ResultFailure, ResultQueryError, ResultSuccess, ResultType} from '~/util/data/result';
 
 export default class RepositoryApiResultHandler {
-  public static async handle<T>(body: () => Promise<T>): Promise<Result<T, any>> {
+  public static async handle<T>(body: () => Promise<T>): Promise<Result<T>> {
     try {
-      return {
-        data: await body(),
-        type: ResultType.Success,
+      const data = await body();
+      // @ts-ignore
+      if (data.Error) {
+        return <ResultQueryError>{
+          // @ts-ignore
+          error: data.Error,
+          type: ResultType.QueryError,
+        };
       }
+      return <ResultSuccess<T>>{
+        data: data,
+        type: ResultType.Success,
+      };
     } catch (e) {
-      return {
+      return <ResultFailure>{
         error: e,
         type: ResultType.Failure,
-      }
+      };
     }
   }
 }

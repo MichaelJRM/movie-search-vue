@@ -1,10 +1,10 @@
 <template>
     <div class="max-w-5xl bg-zinc-900/[.93] rounded-lg shadow-lg flex m-4 relative max-h-[70vh]" @click.stop>
-        <div :style="isMobile ? `background-image: url('${movieDetails.Poster}')` : ''"
+        <div :style="isMobile ? `background-image: url('${movieDetails.Poster != 'N/A'? movieDetails.Poster : useImageAsset('default-movie-poster.jpg')}')` : ''"
              class="absolute bg-no-repeat bg-cover bottom-0 left-0 top-0 right-0 -z-10 blur-md">
         </div>
         <div class="absolute right-0 top-0">
-            <button @click="emitClose">
+            <button @click="$emit('close')">
                 <Icon name="ic:baseline-cancel" size="2em" style="transform: translate(50%, -50%); color: white"></Icon>
             </button>
         </div>
@@ -56,31 +56,27 @@
 </template>
 
 <script lang="ts" setup>
-import useImageAsset from "~/composables/use-image-asset";
+import useImageAsset from '~/composables/use-image-asset';
+import {mobileBreakpoint} from '~/util/common/screen-break-points';
 
 const props = defineProps<{
-  movieDetails: MovieDetails;
+  movieDetails: MovieDetails | undefined;
 }>();
-const emit = defineEmits([
-  'close'
-]);
-const isMobile = ref<boolean>(false);
-const mobileWidthBreakpoint = 768;
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
+const isMobile = ref<boolean>(window.innerWidth < mobileBreakpoint);
 
 function handleResize() {
-  isMobile.value = window.innerWidth < mobileWidthBreakpoint;
-}
-
-function emitClose() {
-  emit('close');
+  isMobile.value = window.innerWidth < mobileBreakpoint;
 }
 
 onMounted(() => {
   window.addEventListener('resize', handleResize);
   handleResize();
-})
+});
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
-})
+});
 </script>

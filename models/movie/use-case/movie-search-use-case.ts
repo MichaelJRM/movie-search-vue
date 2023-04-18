@@ -1,19 +1,16 @@
-import MovieSearchRepository from "~/models/movie/repository/movie-search-repository";
-import {Paged} from "~/util/data/paged";
-import {Result} from "~/util/data/result";
+import MovieSearchRepository from '~/models/movie/repository/movie-search-repository';
+import {Paged} from '~/util/data/paged';
+import {Result} from '~/util/data/result';
 
 export default class MovieSearchUseCase {
-  private repository: MovieSearchRepository;
-
-  constructor(repository: MovieSearchRepository) {
-    this.repository = repository;
+  constructor(private readonly repository: MovieSearchRepository) {
   }
 
-  async search(search: string, yearOfRelease: string | null, page: number): Promise<Result<Paged<MovieSearch>, any>> {
+  async search(search: string, yearOfRelease: string | null, page: number): Promise<Result<Paged<MovieSearch>>> {
     return await this.repository.search(search, yearOfRelease, page);
   }
 
-  async getDetails(imdbID: string): Promise<Result<MovieDetails, any>> {
+  async getDetails(imdbID: string): Promise<Result<MovieDetails>> {
     return await this.repository.getDetails(imdbID);
   }
 }

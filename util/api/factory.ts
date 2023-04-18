@@ -1,6 +1,6 @@
 import {$Fetch} from 'ohmyfetch';
 
-class HttpFactory {
+export default class HttpFactory {
   private readonly $fetch: $Fetch;
 
   constructor(fetcher: $Fetch) {
@@ -11,5 +11,3 @@ class HttpFactory {
     return await this.$fetch(url, {method, body: data, ...extras});
   }
 }
-
-export default HttpFactory;

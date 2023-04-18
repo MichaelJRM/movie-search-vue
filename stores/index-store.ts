@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {ResultType} from "~/util/data/result";
+import {ResultType} from '~/util/data/result';
 
 const minSearchPaginationPage: number = 1;
 const maxSearchPaginationPage: number = 100;
@@ -12,6 +12,7 @@ export const useIndexStore = defineStore('index', () => {
   const currentPage = ref<number>(1);
   const isLoading = ref<boolean>(false);
   const queryError = ref<string>('');
+  const criticalError = ref<string>('');
 
   const getMovies = computed<MovieSearch[]>(() => movies.value);
   const getSearchQuery = computed<string>(() => currentSearchQuery.value);
@@ -19,8 +20,10 @@ export const useIndexStore = defineStore('index', () => {
   const getCurrentPage = computed<number>(() => currentPage.value);
   const getIsLoading = computed<boolean>(() => isLoading.value);
   const getQueryError = computed<string>(() => queryError.value);
+  const getCriticalError = computed<string>(() => criticalError.value);
 
-  const fetchMovies = async (search: string) => {
+  const fetchMovies = async (search: string): Promise<void> => {
+    criticalError.value = '';
     if (search.trim() !== currentSearchQuery.value) {
       currentPage.value = 1;
     }
@@ -31,40 +34,57 @@ export const useIndexStore = defineStore('index', () => {
       return;
     }
     isLoading.value = true;
-    const result = await $useCase.movie.search(currentSearchQuery.value, currentSelectedYearOfRelease.value, currentPage.value);
+    const result = await $useCase.movie.search(
+      currentSearchQuery.value,
+      currentSelectedYearOfRelease.value,
+      currentPage.value
+    );
     switch (result.type) {
       case ResultType.Success:
-        if (result.data.hasOwnProperty('Error')) {
-          queryError.value = result.data['Error'] as string;
-          movies.value = [];
-          break;
-        } else if (queryError.value !== '') {
+        if (queryError.value !== '') {
           queryError.value = '';
         }
         movies.value = result.data.Search;
         break;
+      case ResultType.QueryError:
+        queryError.value = result.error;
+        movies.value = [];
+        break;
       case ResultType.Failure:
-        console.error(result.error);
+        criticalError.value = 'An error occurred while trying to fetch more movies, please check your connection and try again.';
         break;
     }
     isLoading.value = false;
-  }
+  };
 
-  const changeSelectedYearOfRelease = async (year: string | null) => {
+  const changeSelectedYearOfRelease = async (year: string | null): Promise<void> => {
     if (year != currentSelectedYearOfRelease.value) {
       currentPage.value = 1;
     }
     currentSelectedYearOfRelease.value = year;
     if (currentSearchQuery.value === '') return;
     await fetchMovies(currentSearchQuery.value);
-  }
+  };
 
-  const changePage = async (newPage: number) => {
+  const changePage = async (newPage: number): Promise<void> => {
     if (newPage < minSearchPaginationPage) return;
     if (newPage > maxSearchPaginationPage) return;
     currentPage.value = newPage;
     await fetchMovies(currentSearchQuery.value);
-  }
+  };
+
+  const resetSearch = (): void => {
+    movies.value = [];
+    currentSearchQuery.value = '';
+    currentSelectedYearOfRelease.value = '';
+    currentPage.value = 1;
+    isLoading.value = false;
+    queryError.value = '';
+  };
+
+  const acknowledgeCriticalError = (): void => {
+    criticalError.value = '';
+  };
 
   return {
     getMovies,
@@ -72,14 +92,17 @@ export const useIndexStore = defineStore('index', () => {
     getCurrentPage,
     getSelectedYearOfRelease,
     getIsLoading,
+    getCriticalError,
     getQueryError,
     fetchMovies,
     changeSelectedYearOfRelease,
     changePage,
-  }
+    resetSearch,
+    acknowledgeCriticalError,
+  };
 });
 
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useIndexStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useIndexStore, import.meta.hot));
 }

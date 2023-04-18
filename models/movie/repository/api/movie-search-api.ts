@@ -2,19 +2,23 @@ import HttpFactory from "~/util/api/factory";
 import {Paged} from "~/util/data/paged";
 
 export default class MovieSearchApi extends HttpFactory {
-  async search(query: string, page: number): Promise<Paged<MovieSearch>> {
-    return await this.call("get", '', undefined, {
+  async search(query: string, yearOfRelease: string | null, page: number): Promise<Paged<MovieSearch>> {
+    return await this.call('get', '', undefined, {
       query: {
         s: query,
-        page: page.toString()
+        type: 'movie',
+        page: page.toString(),
+        y: yearOfRelease
       }
     });
   }
 
-  async details(id: string): Promise<MovieDetails> {
-    return await this.call("get", '', undefined, {
+  async getDetails(imdbID: string): Promise<MovieDetails> {
+    return await this.call('get', '', undefined, {
       query: {
-        i: id
+        i: imdbID,
+        type: 'movie',
+        plot: 'full'
       }
     });
   }

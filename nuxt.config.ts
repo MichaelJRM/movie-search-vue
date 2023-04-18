@@ -17,4 +17,10 @@ export default defineNuxtConfig({
   pinia: {
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
+  css: [
+    "@/assets/style/main.scss",
+  ],
+  alias: {
+    assets: '/<rootDir>/assets',
+  }
 })

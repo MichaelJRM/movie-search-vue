@@ -9,11 +9,11 @@ export default class MovieSearchUseCase {
     this.repository = repository;
   }
 
-  async search(search: string, page: number): Promise<Result<Paged<MovieSearch>, any>> {
-    return await this.repository.search(search, page);
+  async search(search: string, yearOfRelease: string | null, page: number): Promise<Result<Paged<MovieSearch>, any>> {
+    return await this.repository.search(search, yearOfRelease, page);
   }
 
-  async details(id: string): Promise<Result<MovieDetails, any>> {
-    return await this.repository.details(id);
+  async getDetails(imdbID: string): Promise<Result<MovieDetails, any>> {
+    return await this.repository.getDetails(imdbID);
   }
 }

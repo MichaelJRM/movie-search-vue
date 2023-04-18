@@ -10,15 +10,15 @@ export default class MovieSearchRepository {
     this.api = api;
   }
 
-  async search(query: string, page: number): Promise<Result<Paged<MovieSearch>, any>> {
+  async search(query: string, yearOfRelease: string | null, page: number): Promise<Result<Paged<MovieSearch>, any>> {
     return RepositoryApiResultHandler.handle(async () => {
-      return await this.api.search(query, page);
+      return await this.api.search(query, yearOfRelease, page);
     });
   }
 
-  async details(id: string): Promise<Result<MovieDetails, any>> {
+  async getDetails(imdbID: string): Promise<Result<MovieDetails, any>> {
     return RepositoryApiResultHandler.handle(async () => {
-      return await this.api.details(id);
+      return await this.api.getDetails(imdbID);
     });
   }
 }

@@ -19,6 +19,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'closeRequested'): void;
 }>();
+watchEffect(() => {
+  if (props.isOpen) {
+    // Prevent scrolling when the modal is open.
+    document.body.classList.add('h-full', 'overflow-hidden');
+  } else {
+    document.body.classList.remove('h-full', 'overflow-hidden');
+  }
+});
 </script>
 
 <style lang="scss" scoped>

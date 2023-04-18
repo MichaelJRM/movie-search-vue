@@ -19,14 +19,14 @@
             </div>
         </div>
         <Modal :is-open="isExpanded && store.getIsLoading"
-               @closeRequested="isExpanded.value = false">
+               @closeRequested="isExpanded = false">
             <div class="grid place-items-center h-60 w-2/4">
                 <LoadingIndicator class="text-white"/>
             </div>
         </Modal>
         <Modal :is-open="isExpanded && !store.getIsLoading"
-               @closeRequested="isExpanded.value = false">
-            <MovieDetails :movie-details="store.getMovieDetails" @close="isExpanded.value = false"/>
+               @closeRequested="isExpanded = false">
+            <MovieDetails :movie-details="store.getMovieDetails" @close="isExpanded = false"/>
         </Modal>
         <DialogError ref="dialogError"/>
     </div>

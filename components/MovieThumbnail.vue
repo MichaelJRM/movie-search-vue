@@ -108,6 +108,7 @@ onUnmounted(() => {
     opacity: 1;
     visibility: visible;
     transition: opacity 300ms 300ms, display 300ms 300ms, height 300ms 300ms;
+    transform: translateY(-1px);
   }
 
   .thumbnail:hover .info-wrapper {

@@ -1,6 +1,6 @@
 <template>
     <div ref="thumbnail" :class="thumbnailClasses"
-         class=" thumbnail rounded-md shadow-md hover:scale-105 sm:hover:scale-125 transition duration-150 delay-0
+         class="thumbnail rounded-md shadow-md hover:scale-105 sm:hover:scale-125 transition duration-150 delay-0
              hover:duration-500 hover:delay-300 motion-reduce:transition-none motion-reduce:hover:transform-none cursor-pointer"
          @click="toggleExpanded"
     >
@@ -41,10 +41,7 @@ import DialogError from '~/components/dialog/Error.vue';
 const props = defineProps<{ movie: MovieSearch }>();
 const {isMobile} = useDevice();
 const thumbnail = ref<HTMLInputElement | null>(null);
-const thumbnailClasses = ref<{
-  'origin-left': boolean;
-  'origin-right': boolean;
-}>({'origin-left': false, 'origin-right': false});
+const thumbnailClasses = ref<string[]>();
 const isExpanded = ref<boolean>(false);
 const store = useMovieDetailsStore();
 const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
@@ -61,15 +58,18 @@ watchEffect(() => {
 
 function handleResize() {
   const screenWidth = window.innerWidth;
+  thumbnailClasses.value = [];
   if (isMobile) {
-    thumbnailClasses.value['origin-left'] = false;
-    thumbnailClasses.value['origin-right'] = false;
     return;
   }
   const thumbnailRect = thumbnail.value?.getBoundingClientRect();
   if (!thumbnailRect) return;
-  thumbnailClasses.value['origin-left'] = thumbnailRect.left <= minSideDistanceToChangeOrigin;
-  thumbnailClasses.value['origin-right'] = screenWidth - thumbnailRect.right <= minSideDistanceToChangeOrigin;
+  if (thumbnailRect.left <= minSideDistanceToChangeOrigin) {
+    thumbnailClasses.value.push('origin-left');
+  }
+  if (screenWidth - thumbnailRect.right <= minSideDistanceToChangeOrigin) {
+    thumbnailClasses.value.push('origin-right');
+  }
 }
 
 async function toggleExpanded() {

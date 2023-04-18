@@ -90,31 +90,38 @@ onUnmounted(() => {
 
 </script>
 <style lang="scss" scoped>
-
-.info-wrapper {
-  opacity: 0;
-  height: 0;
-  visibility: hidden;
-  transition: opacity 0ms 0ms, display 0ms 0ms, height 0ms 0ms;
+@media (hover: none) {
+  .info-wrapper {
+    display: none;
+  }
 }
 
-%info-wrapper-on-hover {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 300ms 300ms, display 300ms 300ms, height 300ms 300ms;
-}
+@media (hover: hover) {
+  .info-wrapper {
+    opacity: 0;
+    height: 0;
+    visibility: hidden;
+    transition: opacity 0ms 0ms, display 0ms 0ms, height 0ms 0ms;
+  }
 
-.thumbnail:hover .info-wrapper {
-  @extend %info-wrapper-on-hover;
-}
+  %info-wrapper-on-hover {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 300ms 300ms, display 300ms 300ms, height 300ms 300ms;
+  }
 
-.info-wrapper:hover .info-wrapper {
-  @extend %info-wrapper-on-hover;
-}
+  .thumbnail:hover .info-wrapper {
+    @extend %info-wrapper-on-hover;
+  }
 
-.thumbnail:hover .poster {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  transition: border-bottom-left-radius 300ms 300ms, border-bottom-right-radius 300ms 300ms;
+  .info-wrapper:hover .info-wrapper {
+    @extend %info-wrapper-on-hover;
+  }
+
+  .thumbnail:hover .poster {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    transition: border-bottom-left-radius 300ms 300ms, border-bottom-right-radius 300ms 300ms;
+  }
 }
 </style>

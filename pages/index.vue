@@ -1,7 +1,7 @@
 <template>
     <div class="p-4 sm:p-10 min-h-screen flex flex-col overflow-hidden place-items-center transition duration-150">
         <div :class="{'animate-pulse': (store.getMovies?.length ?? 0) == 0 && store.getIsLoading}"
-             class="sm:min-w-[min(40em,_100%)] w-full sm:w-auto">
+             class="sm:min-w-[min(40rem,_100%)] w-full sm:w-auto">
             <SearchBar
                     :current-page="store.getCurrentPage"
                     :search-query="store.getSearchQuery"

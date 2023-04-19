@@ -10,7 +10,7 @@
                         aria-autocomplete="none"
                         class="
                             block w-full h-full border border-zinc-700 focus:border-zinc-200 focus:outline-none focus-visible:ring-0
-                            active:border-zinc-700 active:enabled:hover:autofill:border-zinc-700 p-2 pl-9 rounded-md bg-zinc-900
+                            active:border-zinc-700 active:enabled:hover:autofill:border-zinc-700 py-2 pl-9 pr-14 rounded-md bg-zinc-900
                             placeholder:italic placeholder:text-zinc-200 text-base text-white
                         "
                         name="search"

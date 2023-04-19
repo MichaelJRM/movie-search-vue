@@ -5,6 +5,7 @@
             <SearchBar
                     :current-page="store.getCurrentPage"
                     :search-query="store.getSearchQuery"
+                    :total-pages="store.getTotalPages"
                     :year-of-release="store.getSelectedYearOfRelease"
                     @newPage="onNewPage"
                     @newSearchQuery="onNewSearchQuery"

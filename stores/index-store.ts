@@ -3,6 +3,7 @@ import {ResultType} from '~/util/data/result';
 
 const minSearchPaginationPage: number = 1;
 const maxSearchPaginationPage: number = 100;
+const maxResultsPerPage: number = 10;
 
 export const useIndexStore = defineStore('index', () => {
   const {$useCase} = useNuxtApp();
@@ -10,6 +11,7 @@ export const useIndexStore = defineStore('index', () => {
   const currentSearchQuery = ref<string>('');
   const currentSelectedYearOfRelease = ref<string | null>('');
   const currentPage = ref<number>(1);
+  const totalResults = ref<number>(0);
   const isLoading = ref<boolean>(false);
   const queryError = ref<string>('');
   const criticalError = ref<string>('');
@@ -18,19 +20,20 @@ export const useIndexStore = defineStore('index', () => {
   const getSearchQuery = computed<string>(() => currentSearchQuery.value);
   const getSelectedYearOfRelease = computed<string | null>(() => currentSelectedYearOfRelease.value);
   const getCurrentPage = computed<number>(() => currentPage.value);
+  const getTotalPages = computed<number>(() => Math.ceil(totalResults.value / maxResultsPerPage));
   const getIsLoading = computed<boolean>(() => isLoading.value);
   const getQueryError = computed<string>(() => queryError.value);
   const getCriticalError = computed<string>(() => criticalError.value);
 
   const fetchMovies = async (search: string): Promise<void> => {
     criticalError.value = '';
+    queryError.value = '';
     if (search.trim() !== currentSearchQuery.value) {
       currentPage.value = 1;
     }
     currentSearchQuery.value = search.trim();
     if (currentSearchQuery.value === '') {
       movies.value = [];
-      queryError.value = '';
       return;
     }
     isLoading.value = true;
@@ -41,17 +44,17 @@ export const useIndexStore = defineStore('index', () => {
     );
     switch (result.type) {
       case ResultType.Success:
-        if (queryError.value !== '') {
-          queryError.value = '';
-        }
         movies.value = result.data.Search;
+        totalResults.value = result.data.totalResults;
         break;
       case ResultType.QueryError:
         queryError.value = result.error;
         movies.value = [];
+        totalResults.value = 0;
         break;
       case ResultType.Failure:
         criticalError.value = 'An error occurred while trying to fetch more movies, please check your connection and try again.';
+        totalResults.value = 0;
         break;
     }
     isLoading.value = false;
@@ -69,6 +72,7 @@ export const useIndexStore = defineStore('index', () => {
   const changePage = async (newPage: number): Promise<void> => {
     if (newPage < minSearchPaginationPage) return;
     if (newPage > maxSearchPaginationPage) return;
+    if (newPage > getTotalPages.value) return;
     currentPage.value = newPage;
     await fetchMovies(currentSearchQuery.value);
   };
@@ -90,6 +94,7 @@ export const useIndexStore = defineStore('index', () => {
     getMovies,
     getSearchQuery,
     getCurrentPage,
+    getTotalPages,
     getSelectedYearOfRelease,
     getIsLoading,
     getCriticalError,

@@ -6,11 +6,12 @@
                     <Icon name="ic:baseline-search" size="1.2em" style="color: white"></Icon>
                 </span>
                 <input
+                        :class="{'!pr-14': !!searchQuery}"
                         :value="searchQuery"
                         aria-autocomplete="none"
                         class="
                             block w-full h-full border border-zinc-700 focus:border-zinc-200 focus:outline-none focus-visible:ring-0
-                            active:border-zinc-700 active:enabled:hover:autofill:border-zinc-700 py-2 pl-9 pr-14 rounded-md bg-zinc-900
+                            active:border-zinc-700 active:enabled:hover:autofill:border-zinc-700 py-2 pl-9 pr-2 rounded-md bg-zinc-900
                             placeholder:italic placeholder:text-zinc-200 text-base text-white
                         "
                         name="search"
@@ -43,7 +44,10 @@
                 <option v-for="year in generateAvailableYears()" :key="year" :value="year">{{ year }}</option>
             </select>
             <template v-if="searchQuery">
-                <button class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center hover:scale-105 transition duration-150 text-white"
+                <button
+                        :class="{ 'hover:scale-105': currentPage !== 1, '!bg-zinc-800/[.50]': currentPage === 1}"
+                        :disabled="currentPage === 1"
+                        class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center transition duration-150 text-white"
                         title="Go to previous page"
                         type="button"
                         @click="$emit('newPage', currentPage - 1)"
@@ -54,7 +58,9 @@
                      title="The current page">
                     {{ currentPage }}
                 </div>
-                <button class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center hover:scale-105 transition duration-150 text-white"
+                <button :class="{ 'hover:scale-105': currentPage !== totalPages, '!bg-zinc-800/[.50]': currentPage === totalPages}"
+                        :disabled="currentPage === totalPages"
+                        class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center transition duration-150 text-white"
                         title="Go to next page"
                         type="button"
                         @click="$emit('newPage', currentPage + 1)"
@@ -70,7 +76,8 @@
 const props = defineProps<{
   searchQuery: string,
   yearOfRelease: string | null,
-  currentPage: number
+  currentPage: number,
+  totalPages: number,
 }>();
 const emit = defineEmits<{
   (e: 'newSearchQuery', searchQuery: string): void;

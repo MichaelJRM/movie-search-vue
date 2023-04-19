@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 const message = ref<string>('');
 const messageDurationInMilliseconds: number = 4000;
-let messageTimeout: NodeJS.Timeout;
+let messageTimeout: number | undefined;
 defineExpose({show});
 
 function show(newMessage: string) {

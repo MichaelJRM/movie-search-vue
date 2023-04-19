@@ -43,7 +43,7 @@ const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
 const videosContainerDynamicClasses = ref<string[]>([]);
 const videosContainerCSSAnimationClasses = ['translate-y-[500%]', 'duration-700'];
 const videosContainerDefaultCSSAnimationClasses = ['translate-y-0', 'duration-700'];
-let searchTimeout: NodeJS.Timeout;
+let searchTimeout: number | undefined;
 
 
 useHead({
@@ -63,7 +63,9 @@ watchEffect(() => {
 });
 
 async function onNewSearchQuery(query: string) {
-  if (searchTimeout) clearTimeout(searchTimeout);
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
   searchTimeout = setTimeout(async () => {
     await applyVideoContainerAnimation(() => store.fetchMovies(query));
   }, query ? 700 : 0);

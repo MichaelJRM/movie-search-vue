@@ -35,7 +35,7 @@
             <select
                     :class="{'min-w-full': !searchQuery}"
                     :value="yearOfRelease"
-                    class="form-select rounded-md border border-zinc-700 focus:border-zinc-200 focus:outline-none
+                    class="rounded-md border border-zinc-700 focus:border-zinc-200 focus:outline-none
                     focus-visible:ring-0 active:border-zinc-700 active:enabled:hover:border-zinc-700 bg-zinc-800 text-white w-full sm:w-auto"
                     title="Filter by year of release"
                     @input="$emit('newYearOfRelease', $event.target.value)"

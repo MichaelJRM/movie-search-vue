@@ -60,7 +60,7 @@ useHead({
 });
 
 watch(getCriticalError, (value) => {
-  if (store.getCriticalError) {
+  if (value) {
     dialogError.value?.show(value);
   }
 });

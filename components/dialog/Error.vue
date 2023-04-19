@@ -18,6 +18,9 @@ defineExpose({show});
 
 function show(newMessage: string) {
   message.value = newMessage;
+  if (messageTimeout) {
+    clearTimeout(messageTimeout);
+  }
   messageTimeout = setTimeout(hide, messageDurationInMilliseconds);
 }
 

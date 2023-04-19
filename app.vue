@@ -3,5 +3,10 @@
         <NuxtPage/>
     </div>
 </template>
-<style>
-</style>
+<script lang="ts" setup>
+useHead({
+  bodyAttrs: {
+    class: ['bg-zinc-900'],
+  },
+});
+</script>

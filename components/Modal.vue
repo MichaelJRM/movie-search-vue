@@ -22,9 +22,10 @@ const emit = defineEmits<{
 watchEffect(() => {
   if (props.isOpen) {
     // Prevent scrolling when the modal is open.
-    document.body.classList.add('h-full', 'overflow-hidden');
+    // We add the padding on the right to prevent the body from shifting when the scrollbar disappears.
+    document.body.classList.add('h-full', 'overflow-hidden', 'pr-4');
   } else {
-    document.body.classList.remove('h-full', 'overflow-hidden');
+    document.body.classList.remove('h-full', 'overflow-hidden', 'pr-4');
   }
 });
 </script>

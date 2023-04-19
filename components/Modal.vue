@@ -19,13 +19,22 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'closeRequested'): void;
 }>();
+const {isDesktop} = useDevice();
+
+
 watchEffect(() => {
   if (props.isOpen) {
     // Prevent scrolling when the modal is open.
     // We add the padding on the right to prevent the body from shifting when the scrollbar disappears.
-    document.body.classList.add('h-full', 'overflow-hidden', 'pr-4');
+    document.body.classList.add('h-full', 'overflow-hidden');
+    if (isDesktop) {
+      document.body.classList.add('pr-4');
+    }
   } else {
-    document.body.classList.remove('h-full', 'overflow-hidden', 'pr-4');
+    document.body.classList.remove('h-full', 'overflow-hidden');
+    if (isDesktop) {
+      document.body.classList.remove('pr-4');
+    }
   }
 });
 </script>

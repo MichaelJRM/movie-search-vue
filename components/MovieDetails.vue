@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import {mobileBreakpoint} from '~/util/common/screen-break-points';
+import {mobileBreakpoint} from '~/util/data/screen-break-points';
 import loadImageAsset from '~/util/common/load-image-asset';
 
 const props = defineProps<{

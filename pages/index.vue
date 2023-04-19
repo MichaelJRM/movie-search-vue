@@ -18,7 +18,8 @@
             {{ store.getQueryError }}
         </div>
         <div v-if="store.getMovies && store.getMovies.length" :class="videosContainerDynamicClasses"
-             class="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,_minmax(200px,350px))] gap-2 sm:gap-4 mt-8 z-10 mb-32 w-full justify-center"
+             class="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,_minmax(200px,350px))] gap-2 sm:gap-4 mt-8 z-10
+             mb-32 w-full justify-center"
         >
             <MovieThumbnail v-for="(movie, index) in store.getMovies" :key="index" :movie="movie"/>
         </div>
@@ -44,6 +45,7 @@ const videosContainerDynamicClasses = ref<string[]>([]);
 const videosContainerCSSAnimationClasses = ['translate-y-[500%]', 'duration-700'];
 const videosContainerDefaultCSSAnimationClasses = ['translate-y-0', 'duration-700'];
 let searchTimeout: number | undefined;
+const searchTimeoutInMs = 700;
 
 
 useHead({
@@ -68,7 +70,7 @@ async function onNewSearchQuery(query: string) {
   }
   searchTimeout = setTimeout(async () => {
     await applyVideoContainerAnimation(() => store.fetchMovies(query));
-  }, query ? 700 : 0);
+  }, query ? searchTimeoutInMs : 0);
 }
 
 async function onNewYearOfRelease(year: string | null) {

@@ -1,7 +1,9 @@
 <template>
-    <div ref="thumbnail" :class="thumbnailClasses"
+    <div ref="thumbnail"
+         :class="thumbnailClasses"
          class="thumbnail rounded-md shadow-md hover:scale-105 sm:hover:scale-125 transition duration-150 delay-0
-             hover:duration-500 hover:delay-300 motion-reduce:transition-none motion-reduce:hover:transform-none cursor-pointer"
+             hover:duration-500 hover:delay-300 motion-reduce:transition-none motion-reduce:hover:transform-none
+             cursor-pointer"
          @click="toggleExpanded"
     >
         <div class="poster overflow-hidden rounded-md h-full aspect-[2/3]">
@@ -47,7 +49,6 @@ const store = useMovieDetailsStore();
 const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
 const minSideDistanceToChangeOrigin = 60;
 
-
 watchEffect(() => {
   if (store.getCriticalError) {
     dialogError.value?.show(store.getCriticalError);
@@ -55,8 +56,11 @@ watchEffect(() => {
   }
 });
 
-
 function handleResize() {
+  setThumbnailOriginBasedOnDistanceToScreenEdges();
+}
+
+function setThumbnailOriginBasedOnDistanceToScreenEdges() {
   const screenWidth = window.innerWidth;
   thumbnailClasses.value = [];
   if (isMobile) {

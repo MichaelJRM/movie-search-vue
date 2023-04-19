@@ -12,8 +12,7 @@
                         class="
                             block w-full h-full border border-zinc-700 focus:border-zinc-200 focus:outline-none focus-visible:ring-0
                             active:border-zinc-700 active:enabled:hover:autofill:border-zinc-700 py-2 pl-9 pr-2 rounded-md bg-zinc-900
-                            placeholder:italic placeholder:text-zinc-200 text-base text-white
-                        "
+                            placeholder:italic placeholder:text-zinc-200 text-base text-white"
                         name="search"
                         placeholder="Search for a movie by title"
                         type="text"
@@ -21,7 +20,8 @@
                 >
                 <span class="absolute inset-y-0 right-0 flex items-center pr-2 py-2">
                      <button v-if="searchQuery"
-                             class="rounded-md h-full border border-zinc-700 min-w-fit w-10 flex justify-center items-center hover:scale-105 transition duration-150 bg-zinc-800 text-white"
+                             class="rounded-md h-full border border-zinc-700 min-w-fit w-10 flex justify-center
+                             items-center hover:scale-105 transition duration-150 bg-zinc-800 text-white"
                              title="Reset search"
                              @click="$emit('reset')"
                      >

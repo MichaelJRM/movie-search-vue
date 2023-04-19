@@ -21,19 +21,20 @@ const emit = defineEmits<{
 }>();
 const {isDesktop} = useDevice();
 
-
+// Prevent scrolling when the modal is open.
+const openExtraCssClasses = ['h-full', 'overflow-hidden'];
+// We add the padding on the right to prevent the body from shifting when the scrollbar disappears.
+const openDesktopOnlyExtraCssClasses = ['pr-4'];
 watchEffect(() => {
   if (props.isOpen) {
-    // Prevent scrolling when the modal is open.
-    // We add the padding on the right to prevent the body from shifting when the scrollbar disappears.
-    document.body.classList.add('h-full', 'overflow-hidden');
+    document.body.classList.add(...openExtraCssClasses);
     if (isDesktop) {
-      document.body.classList.add('pr-4');
+      document.body.classList.add(...openDesktopOnlyExtraCssClasses);
     }
   } else {
-    document.body.classList.remove('h-full', 'overflow-hidden');
+    document.body.classList.remove(...openExtraCssClasses);
     if (isDesktop) {
-      document.body.classList.remove('pr-4');
+      document.body.classList.remove(...openDesktopOnlyExtraCssClasses);
     }
   }
 });

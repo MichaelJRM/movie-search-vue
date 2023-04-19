@@ -36,17 +36,12 @@ export const useMovieDetailsStore = defineStore('movie-details', () => {
     isLoading.value = false;
   };
 
-  const acknowledgeCriticalError = (): void => {
-    criticalError.value = '';
-  };
-
   return {
     getMovieDetails,
     getIsLoading,
     getCriticalError,
     getQueryError,
     fetchMovieDetails,
-    acknowledgeCriticalError,
   };
 });
 

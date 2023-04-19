@@ -14,8 +14,8 @@
              title="The current page">
             {{ currentPage }}
         </div>
-        <button :class="{ 'hover:scale-105': currentPage !== totalPages, '!bg-zinc-800/[.50]': currentPage === totalPages}"
-                :disabled="currentPage === totalPages"
+        <button :class="{ 'hover:scale-105': totalPages !== 0 && currentPage !== totalPages, '!bg-zinc-800/[.50]': totalPages === 0 || currentPage === totalPages}"
+                :disabled="totalPages === 0 || currentPage === totalPages"
                 class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center transition duration-150 text-white"
                 title="Go to next page"
                 type="button"
@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<{
   totalPages: number,
 }>(), {
   currentPage: 1,
-  totalPages: 1,
+  totalPages: 0,
 });
 const emit = defineEmits<{
   (e: 'newPage', page: number): void;

@@ -9,8 +9,8 @@ export const useIndexStore = defineStore('index', () => {
   const {$useCase} = useNuxtApp();
   const movies = ref<MovieSearch[]>([]);
   const currentSearchQuery = ref<string>('');
-  const currentSelectedYearOfRelease = ref<string | null>('');
-  const currentPage = ref<number>(1);
+  const currentYearOfRelease = ref<string | null>(null);
+  const currentPageNumber = ref<number>(1);
   const totalResults = ref<number>(0);
   const isLoading = ref<boolean>(false);
   const queryError = ref<string>('');
@@ -18,29 +18,41 @@ export const useIndexStore = defineStore('index', () => {
 
   const getMovies = computed<MovieSearch[]>(() => movies.value);
   const getSearchQuery = computed<string>(() => currentSearchQuery.value);
-  const getSelectedYearOfRelease = computed<string | null>(() => currentSelectedYearOfRelease.value);
-  const getCurrentPage = computed<number>(() => currentPage.value);
+  const getYearOfRelease = computed<string | null>(() => currentYearOfRelease.value);
+  const getCurrentPageNumber = computed<number>(() => currentPageNumber.value);
   const getTotalPages = computed<number>(() => Math.ceil(totalResults.value / maxResultsPerPage));
   const getIsLoading = computed<boolean>(() => isLoading.value);
   const getQueryError = computed<string>(() => queryError.value);
   const getCriticalError = computed<string>(() => criticalError.value);
 
-  const fetchMovies = async (search: string): Promise<void> => {
+  const fetchMovies = async (searchQuery: string, yearOfRelease: string | null, pageNumber: number): Promise<void> => {
     criticalError.value = '';
     queryError.value = '';
-    if (search.trim() !== currentSearchQuery.value) {
-      currentPage.value = 1;
+    let previousSearchQuery = currentSearchQuery.value;
+    let previousYearOfRelease = currentYearOfRelease.value;
+    let previousPageNumber = currentPageNumber.value;
+    let newSearchQuery = searchQuery.trim();
+    let newYearOfRelease = yearOfRelease;
+    let newPageNumber = pageNumber;
+
+    if (newSearchQuery !== previousSearchQuery) {
+      newPageNumber = 1;
     }
-    currentSearchQuery.value = search.trim();
-    if (currentSearchQuery.value === '') {
+    if (newSearchQuery === '') {
       movies.value = [];
+      currentPageNumber.value = 1;
       return;
     }
+
+    currentSearchQuery.value = newSearchQuery;
+    currentYearOfRelease.value = yearOfRelease;
+    currentPageNumber.value = newPageNumber;
     isLoading.value = true;
+
     const result = await $useCase.movie.search(
-      currentSearchQuery.value,
-      currentSelectedYearOfRelease.value,
-      currentPage.value
+      newSearchQuery,
+      yearOfRelease,
+      newPageNumber
     );
     switch (result.type) {
       case ResultType.Success:
@@ -53,57 +65,57 @@ export const useIndexStore = defineStore('index', () => {
         totalResults.value = 0;
         break;
       case ResultType.Failure:
+        newSearchQuery = previousSearchQuery;
+        newYearOfRelease = previousYearOfRelease;
+        newPageNumber = previousPageNumber;
         criticalError.value = 'An error occurred while trying to fetch more movies, please check your connection and try again.';
-        totalResults.value = 0;
         break;
     }
+    currentSearchQuery.value = newSearchQuery;
+    currentYearOfRelease.value = newYearOfRelease;
+    currentPageNumber.value = newPageNumber;
     isLoading.value = false;
   };
 
-  const changeSelectedYearOfRelease = async (year: string | null): Promise<void> => {
-    if (year != currentSelectedYearOfRelease.value) {
-      currentPage.value = 1;
+  const changeYearOfRelease = async (year: string | null): Promise<void> => {
+    const newPageNumber = year != currentYearOfRelease.value ? 1 : currentPageNumber.value;
+    if (!currentSearchQuery.value) {
+      currentYearOfRelease.value = year;
+      return;
     }
-    currentSelectedYearOfRelease.value = year;
-    if (currentSearchQuery.value === '') return;
-    await fetchMovies(currentSearchQuery.value);
+    await fetchMovies(currentSearchQuery.value, year, newPageNumber);
   };
 
-  const changePage = async (newPage: number): Promise<void> => {
+  const changePageNumber = async (newPage: number): Promise<void> => {
     if (newPage < minSearchPaginationPage) return;
     if (newPage > maxSearchPaginationPage) return;
     if (newPage > getTotalPages.value) return;
-    currentPage.value = newPage;
-    await fetchMovies(currentSearchQuery.value);
+    await fetchMovies(currentSearchQuery.value, currentYearOfRelease.value, newPage);
   };
 
   const resetSearch = (): void => {
     movies.value = [];
     currentSearchQuery.value = '';
-    currentSelectedYearOfRelease.value = '';
-    currentPage.value = 1;
+    currentYearOfRelease.value = null;
+    currentPageNumber.value = 1;
     isLoading.value = false;
     queryError.value = '';
   };
 
-  const acknowledgeCriticalError = (): void => {
-    criticalError.value = '';
-  };
 
   return {
     getMovies,
     getSearchQuery,
-    getCurrentPage,
+    getCurrentPageNumber,
     getTotalPages,
-    getSelectedYearOfRelease,
+    getYearOfRelease,
     getIsLoading,
     getCriticalError,
     getQueryError,
     fetchMovies,
-    changeSelectedYearOfRelease,
-    changePage,
+    changeYearOfRelease,
+    changePageNumber,
     resetSearch,
-    acknowledgeCriticalError,
   };
 });
 

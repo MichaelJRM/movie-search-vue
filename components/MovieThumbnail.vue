@@ -39,6 +39,7 @@ import {useMovieDetailsStore} from '~/stores/movie-details-store';
 import Modal from '~/components/Modal.vue';
 import DialogError from '~/components/dialog/Error.vue';
 import loadImageAsset from '~/util/common/load-image-asset';
+import {storeToRefs} from 'pinia';
 
 const props = defineProps<{ movie: MovieSearch }>();
 const {isMobile} = useDevice();
@@ -48,10 +49,12 @@ const isExpanded = ref<boolean>(false);
 const store = useMovieDetailsStore();
 const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
 const minSideDistanceToChangeOrigin = 60;
+const {getCriticalError} = storeToRefs(store);
 
-watchEffect(() => {
+
+watch(getCriticalError, (value) => {
   if (store.getCriticalError) {
-    dialogError.value?.show(store.getCriticalError);
+    dialogError.value?.show(value);
     isExpanded.value = false;
   }
 });

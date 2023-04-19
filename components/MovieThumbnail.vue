@@ -5,8 +5,8 @@
          @click="toggleExpanded"
     >
         <div class="poster overflow-hidden rounded-md h-full aspect-[2/3]">
-            <img :src="props.movie.Poster != 'N/A' ? props.movie.Poster : useImageAsset('default-movie-poster.jpg')"
-                 alt="Movie poster"
+            <img :alt="`${props.movie.Title} poster`"
+                 :src="props.movie.Poster != 'N/A' ? props.movie.Poster : loadImageAsset('default-movie-poster.jpg')"
                  class="object-cover w-full h-full"
             >
         </div>
@@ -34,9 +34,9 @@
 
 <script lang="ts" setup>
 import {useMovieDetailsStore} from '~/stores/movie-details-store';
-import useImageAsset from '~/composables/use-image-asset';
 import Modal from '~/components/Modal.vue';
 import DialogError from '~/components/dialog/Error.vue';
+import loadImageAsset from '~/util/common/load-image-asset';
 
 const props = defineProps<{ movie: MovieSearch }>();
 const {isMobile} = useDevice();

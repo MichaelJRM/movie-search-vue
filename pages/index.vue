@@ -18,7 +18,7 @@
             {{ store.getQueryError }}
         </div>
         <div v-if="store.getMovies && store.getMovies.length" :class="videosContainerDynamicClasses"
-             class="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,_minmax(200px,350px))] gap-2 sm:gap-4 mt-8 z-10 mb-60 w-full justify-center"
+             class="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,_minmax(200px,350px))] gap-2 sm:gap-4 mt-8 z-10 mb-32 w-full justify-center"
         >
             <MovieThumbnail v-for="(movie, index) in store.getMovies" :key="index" :movie="movie"/>
         </div>
@@ -26,6 +26,8 @@
              class="grid place-items-center absolute top-1/2 left-1/2 text-white -translate-x-1/2 translate-y-1/2">
             <LoadingIndicator/>
         </div>
+        <Pagination v-show="store.getSearchQuery" :current-page="store.getCurrentPage"
+                    :total-pages="store.getTotalPages" @newPage="onBottomPaginationNewPage"/>
         <DialogError ref="dialogError"/>
     </div>
 </template>
@@ -33,6 +35,8 @@
 <script lang="ts" setup>
 import {useIndexStore} from '~/stores/index-store';
 import DialogError from '~/components/dialog/Error.vue';
+import Pagination from '~/components/Pagination.vue';
+import wait from '~/util/common/wait';
 
 const store = useIndexStore();
 const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
@@ -41,6 +45,16 @@ const videosContainerCSSAnimationClasses = ['translate-y-[500%]', 'duration-700'
 const videosContainerDefaultCSSAnimationClasses = ['translate-y-0', 'duration-700'];
 let searchTimeout: NodeJS.Timeout;
 
+
+useHead({
+  title: 'Movie Search',
+  meta: [
+    {
+      name: 'description',
+      content: 'Search for movies',
+    },
+  ],
+});
 
 watchEffect(() => {
   if (store.getCriticalError) {
@@ -62,6 +76,12 @@ async function onNewYearOfRelease(year: string | null) {
 
 async function onNewPage(page: number) {
   await applyVideoContainerAnimation(() => store.changePage(page));
+}
+
+async function onBottomPaginationNewPage(page: number) {
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  await wait(300);
+  await onNewPage(page);
 }
 
 async function onResetSearch() {

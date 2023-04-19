@@ -1,6 +1,6 @@
 import {filename} from 'pathe/utils';
 
-export default function useImageAsset(path: string) {
+export default function loadImageAsset(path: string) {
   let assets;
   if (/(\.svg)$/i.exec(path)) {
     assets = import.meta.glob('~/assets/image/**/*.svg', {eager: true});

@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import {ResultType} from '~/util/data/result';
+import wait from '~/util/common/wait';
 
 export const useMovieDetailsStore = defineStore('movie-details', () => {
   const {$useCase} = useNuxtApp();
@@ -17,7 +18,7 @@ export const useMovieDetailsStore = defineStore('movie-details', () => {
     criticalError.value = '';
     queryError.value = '';
     isLoading.value = true;
-    await new Promise(res => setTimeout(res, 200));
+    await wait(200);
     const result = await $useCase.movie.getDetails(imdbID);
     switch (result.type) {
       case ResultType.Success:

@@ -31,12 +31,12 @@
             </label>
 
         </div>
-        <div class="flex flex-row justify-center space-x-2 w-full h-11">
+        <div :class="{'w-full': searchQuery}" class="flex w-full sm:w-auto flex-row justify-center space-x-2 h-11">
             <select
                     :class="{'min-w-full': !searchQuery}"
                     :value="yearOfRelease"
                     class="form-select rounded-md border border-zinc-700 focus:border-zinc-200 focus:outline-none
-                    focus-visible:ring-0 active:border-zinc-700 active:enabled:hover:border-zinc-700 bg-zinc-800 text-white"
+                    focus-visible:ring-0 active:border-zinc-700 active:enabled:hover:border-zinc-700 bg-zinc-800 text-white w-full sm:w-auto"
                     title="Filter by year of release"
                     @input="$emit('newYearOfRelease', $event.target.value)"
             >
@@ -44,29 +44,9 @@
                 <option v-for="year in generateAvailableYears()" :key="year" :value="year">{{ year }}</option>
             </select>
             <template v-if="searchQuery">
-                <button
-                        :class="{ 'hover:scale-105': currentPage !== 1, '!bg-zinc-800/[.50]': currentPage === 1}"
-                        :disabled="currentPage === 1"
-                        class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center transition duration-150 text-white"
-                        title="Go to previous page"
-                        type="button"
-                        @click="$emit('newPage', currentPage - 1)"
-                >
-                    <Icon name="ic:baseline-arrow-back"></Icon>
-                </button>
-                <div class="rounded-md border border-zinc-700 min-w-fit w-8 bg-zinc-800 flex justify-center items-center text-sm text-white"
-                     title="The current page">
-                    {{ currentPage }}
-                </div>
-                <button :class="{ 'hover:scale-105': currentPage !== totalPages, '!bg-zinc-800/[.50]': currentPage === totalPages}"
-                        :disabled="currentPage === totalPages"
-                        class="rounded-md border border-zinc-700 min-w-fit w-16 bg-zinc-800 flex justify-center items-center transition duration-150 text-white"
-                        title="Go to next page"
-                        type="button"
-                        @click="$emit('newPage', currentPage + 1)"
-                >
-                    <Icon name="ic:baseline-arrow-forward"></Icon>
-                </button>
+                <Pagination
+                        v-show="searchQuery" :current-page="currentPage" :total-pages="totalPages" @newPage="onNewPage"
+                />
             </template>
         </div>
     </div>
@@ -89,5 +69,9 @@ const minYearOfRelease = 1800;
 
 function generateAvailableYears() {
   return Array(new Date().getFullYear() + 1 - minYearOfRelease).fill(minYearOfRelease).map((x, y) => x + y).reverse();
+}
+
+function onNewPage(newPage: number) {
+  emit('newPage', newPage);
 }
 </script>

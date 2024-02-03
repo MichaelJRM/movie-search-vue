@@ -1,4 +1,4 @@
-import {Result, ResultFailure, ResultQueryError, ResultSuccess, ResultType} from '~/util/data/result';
+import {type Result, type ResultFailure, type ResultQueryError, type ResultSuccess, ResultType} from '~/util/data/result';
 
 export default class RepositoryApiResultHandler {
   public static async handle<T>(body: () => Promise<T>): Promise<Result<T>> {

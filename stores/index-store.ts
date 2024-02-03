@@ -15,6 +15,7 @@ export const useIndexStore = defineStore('index', () => {
   const isLoading = ref<boolean>(false);
   const queryError = ref<string>('');
   const criticalError = ref<string>('');
+  const numOfSearchesBeingPerformed = ref<number>(0);
 
   const getMovies = computed<MovieSearch[]>(() => movies.value);
   const getSearchQuery = computed<string>(() => currentSearchQuery.value);
@@ -32,10 +33,7 @@ export const useIndexStore = defineStore('index', () => {
     criticalError.value = '';
     queryError.value = '';
     let previousSearchQuery = currentSearchQuery.value;
-    let previousYearOfRelease = currentYearOfRelease.value;
-    let previousPageNumber = currentPageNumber.value;
     let newSearchQuery = searchQuery.trim();
-    let newYearOfRelease = yearOfRelease;
     let newPageNumber = pageNumber;
 
     if (previousSearchQuery && newSearchQuery !== previousSearchQuery) {
@@ -52,11 +50,14 @@ export const useIndexStore = defineStore('index', () => {
     currentPageNumber.value = newPageNumber;
     isLoading.value = true;
 
+    numOfSearchesBeingPerformed.value += 1;
+
     const result = await $useCase.movie.search(
       newSearchQuery,
       yearOfRelease,
       newPageNumber
     );
+
     switch (result.type) {
       case ResultType.Success:
         movies.value = result.data.Search;
@@ -68,16 +69,15 @@ export const useIndexStore = defineStore('index', () => {
         totalResults.value = 0;
         break;
       case ResultType.Failure:
-        newSearchQuery = previousSearchQuery;
-        newYearOfRelease = previousYearOfRelease;
-        newPageNumber = previousPageNumber;
         criticalError.value = 'An error occurred while trying to fetch more movies, please check your connection and try again.';
         break;
     }
-    currentSearchQuery.value = newSearchQuery;
-    currentYearOfRelease.value = newYearOfRelease;
-    currentPageNumber.value = newPageNumber;
-    isLoading.value = false;
+
+    if (numOfSearchesBeingPerformed.value === 1) {
+      isLoading.value = false;
+    }
+
+    numOfSearchesBeingPerformed.value -= 1;
   };
 
   const changeYearOfRelease = async (year: string | null): Promise<void> => {

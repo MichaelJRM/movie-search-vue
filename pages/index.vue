@@ -51,6 +51,7 @@ const searchTimeoutInMs = 700;
 const {getCriticalError, getCurrentPageNumber, getSearchQuery, getYearOfRelease} = storeToRefs(store);
 const router = useRouter();
 const route = useRoute();
+const routeQuery = computed(() => route.query);
 
 onMounted(() => {
   parseRouteQuery(route.query)
@@ -75,6 +76,9 @@ watch(getCriticalError, (value) => {
 watch(getSearchQuery, () => updateRouteQuery());
 watch(getYearOfRelease, () => updateRouteQuery());
 watch(getCurrentPageNumber, () => updateRouteQuery());
+watch(routeQuery, (value) => {
+  parseRouteQuery(value)
+})
 
 function updateRouteQuery() {
   let query = {
@@ -84,6 +88,14 @@ function updateRouteQuery() {
   if (store.getYearOfRelease) {
     query.y = store.getYearOfRelease
   }
+
+  const hasSameQuery: boolean = (
+      query.q == route.query.q
+      && query.p === parseInt(route.query.p as string)
+      && query.y == route.query.y
+  );
+  if (hasSameQuery) return;
+
   router.push({
     path: '/',
     query: query
@@ -96,7 +108,6 @@ async function parseRouteQuery(params: LocationQuery) {
 
   const pageNumber = params.p as LocationQueryValue;
   const year = params.y as LocationQueryValue;
-
 
   await applyVideoContainerAnimation(() => store.fetchMovies(
       searchQuery,

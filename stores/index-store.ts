@@ -26,6 +26,9 @@ export const useIndexStore = defineStore('index', () => {
   const getCriticalError = computed<string>(() => criticalError.value);
 
   const fetchMovies = async (searchQuery: string, yearOfRelease: string | null, pageNumber: number): Promise<void> => {
+    if (!_isNewPageValid(pageNumber)) return;
+    if (pageNumber == 0) pageNumber = minSearchPaginationPage;
+
     criticalError.value = '';
     queryError.value = '';
     let previousSearchQuery = currentSearchQuery.value;
@@ -35,7 +38,7 @@ export const useIndexStore = defineStore('index', () => {
     let newYearOfRelease = yearOfRelease;
     let newPageNumber = pageNumber;
 
-    if (newSearchQuery !== previousSearchQuery) {
+    if (previousSearchQuery && newSearchQuery !== previousSearchQuery) {
       newPageNumber = 1;
     }
     if (newSearchQuery === '') {
@@ -87,13 +90,11 @@ export const useIndexStore = defineStore('index', () => {
   };
 
   const changePageNumber = async (newPage: number): Promise<void> => {
-    if (newPage < minSearchPaginationPage) return;
-    if (newPage > maxSearchPaginationPage) return;
-    if (newPage > getTotalPages.value) return;
+    if (!_isNewPageValid(newPage)) return;
     await fetchMovies(currentSearchQuery.value, currentYearOfRelease.value, newPage);
   };
 
-  const resetSearch = (): void => {
+  const resetSearch = async (): Promise<void> => {
     movies.value = [];
     currentSearchQuery.value = '';
     currentYearOfRelease.value = null;
@@ -102,6 +103,10 @@ export const useIndexStore = defineStore('index', () => {
     queryError.value = '';
   };
 
+  const _isNewPageValid = (newPage: number): boolean => {
+    if (newPage == 1) return true;
+    return newPage > minSearchPaginationPage && newPage < maxSearchPaginationPage && (getTotalPages.value == 0 || newPage <= getTotalPages.value);
+  };
 
   return {
     getMovies,

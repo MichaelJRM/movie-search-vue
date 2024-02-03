@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col sm:flex-row w-full justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-        <div class="flex flex-row justify-center space-x-2 w-full h-11">
+        <div class="flex flex-row justify-center space-x-2 h-11 grow">
             <label class="relative block w-full">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <Icon name="ic:baseline-search" size="1.2em" style="color: white"></Icon>
@@ -31,12 +31,11 @@
             </label>
 
         </div>
-        <div :class="{'w-full': searchQuery}" class="flex w-full sm:w-auto flex-row justify-center space-x-2 h-11">
+        <div class="flex flex-row justify-center space-x-2 h-11">
             <select
-                    :class="{'min-w-full': !searchQuery}"
                     :value="yearOfRelease"
                     class="rounded-md border border-zinc-700 focus:border-zinc-200 focus:outline-none
-                    focus-visible:ring-0 active:border-zinc-700 active:enabled:hover:border-zinc-700 bg-zinc-800 text-white w-full sm:w-auto"
+                    focus-visible:ring-0 active:border-zinc-700 active:enabled:hover:border-zinc-700 bg-zinc-800 text-white grow sm:w-32"
                     title="Filter by year of release"
                     @input="$emit('newYearOfRelease', $event.target.value)"
             >

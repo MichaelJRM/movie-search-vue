@@ -39,15 +39,22 @@ import DialogError from '~/components/dialog/Error.vue';
 import Pagination from '~/components/Pagination.vue';
 import wait from '~/util/common/wait';
 import {storeToRefs} from 'pinia';
+import type {LocationQuery, LocationQueryValue} from "vue-router";
 
 const store = useIndexStore();
 const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
 const videosContainerDynamicClasses = ref<string[]>([]);
 const videosContainerCSSAnimationClasses = ['translate-y-[500%]', 'duration-700'];
 const videosContainerDefaultCSSAnimationClasses = ['translate-y-0', 'duration-700'];
-let searchTimeout: number | undefined;
+let searchTimeout: NodeJS.Timeout;
 const searchTimeoutInMs = 700;
-const {getCriticalError} = storeToRefs(store);
+const {getCriticalError, getCurrentPageNumber, getSearchQuery, getYearOfRelease} = storeToRefs(store);
+const router = useRouter();
+const route = useRoute();
+
+onMounted(() => {
+  parseRouteQuery(route.query)
+})
 
 useHead({
   title: 'Movie Search',
@@ -65,13 +72,50 @@ watch(getCriticalError, (value) => {
   }
 });
 
+watch(getSearchQuery, () => updateRouteQuery());
+watch(getYearOfRelease, () => updateRouteQuery());
+watch(getCurrentPageNumber, () => updateRouteQuery());
+
+function updateRouteQuery() {
+  let query = {
+    q: store.getSearchQuery,
+    p: store.getCurrentPageNumber
+  }
+  if (store.getYearOfRelease) {
+    query.y = store.getYearOfRelease
+  }
+  router.push({
+    path: '/',
+    query: query
+  })
+}
+
+async function parseRouteQuery(params: LocationQuery) {
+  const searchQuery = params.q as LocationQueryValue;
+  if (!searchQuery) return;
+
+  const pageNumber = params.p as LocationQueryValue;
+  const year = params.y as LocationQueryValue;
+
+
+  await applyVideoContainerAnimation(() => store.fetchMovies(
+      searchQuery,
+      year ?? null,
+      parseInt(pageNumber as string) ?? 0)
+  );
+}
+
 async function onNewSearchQuery(searchQuery: string) {
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
   searchTimeout = setTimeout(async () => {
-    await applyVideoContainerAnimation(() => store.fetchMovies(searchQuery, store.getYearOfRelease, store.getCurrentPageNumber));
+    await applySearchQuery(searchQuery)
   }, searchQuery ? searchTimeoutInMs : 0);
+}
+
+async function applySearchQuery(searchQuery: string) {
+  await applyVideoContainerAnimation(() => store.fetchMovies(searchQuery, store.getYearOfRelease, store.getCurrentPageNumber));
 }
 
 async function onNewYearOfRelease(year: string | null) {
@@ -84,8 +128,11 @@ async function onNewPage(page: number) {
 }
 
 async function onBottomPaginationNewPage(page: number) {
-  window.scrollTo({top: 0, behavior: 'smooth'});
-  await wait(300);
+  if (document.documentElement.scrollTop != 0) {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    await wait(300);
+  }
+
   await onNewPage(page);
 }
 
@@ -93,7 +140,7 @@ async function onResetSearch() {
   await applyVideoContainerAnimation(store.resetSearch);
 }
 
-async function applyVideoContainerAnimation(callback: () => void) {
+async function applyVideoContainerAnimation(callback: () => Promise<void>) {
   videosContainerDynamicClasses.value = videosContainerCSSAnimationClasses;
   await callback();
   videosContainerDynamicClasses.value = videosContainerDefaultCSSAnimationClasses;

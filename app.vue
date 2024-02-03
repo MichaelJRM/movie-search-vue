@@ -7,6 +7,9 @@
 
 <script lang="ts" setup>
 useHead({
+  htmlAttrs: {
+    lang: 'en',
+  },
   bodyAttrs: {
     class: ['bg-zinc-900'],
   },

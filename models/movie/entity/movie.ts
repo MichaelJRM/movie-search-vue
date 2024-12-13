@@ -1,4 +1,4 @@
-interface MovieSearch {
+export interface MovieSearch {
   Poster: string;
   Title: string;
   Type: string;
@@ -6,7 +6,7 @@ interface MovieSearch {
   imdbID: string;
 }
 
-interface MovieDetails {
+export interface MovieDetails {
   Title: string;
   Year: string;
   Rated: string;

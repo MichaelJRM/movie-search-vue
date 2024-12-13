@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import {ResultType} from '~/util/data/result';
+import {type MovieSearch} from '~/models/movie/entity/movie'
 
 const minSearchPaginationPage: number = 1;
 const maxSearchPaginationPage: number = 100;
@@ -7,6 +8,7 @@ const maxResultsPerPage: number = 10;
 
 export const useIndexStore = defineStore('index', () => {
   const {$useCase} = useNuxtApp();
+
   const movies = ref<MovieSearch[]>([]);
   const currentSearchQuery = ref<string>('');
   const currentYearOfRelease = ref<string | null>(null);

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full p-4 grid place-items-center text-white">
-        <span>&copy; Michael Moniz {{ new Date().getFullYear() }}</span>
+        <span>&copy; Michael Moniz 2023</span>
     </div>
 </template>
 

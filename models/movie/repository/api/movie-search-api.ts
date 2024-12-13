@@ -1,5 +1,6 @@
 import HttpFactory from "~/util/api/factory";
 import {Paged} from "~/util/data/paged";
+import type {MovieSearch, MovieDetails} from '~/models/movie/entity/movie';
 
 export default class MovieSearchApi extends HttpFactory {
   async search(query: string, yearOfRelease: string | null, page: number): Promise<Paged<MovieSearch>> {

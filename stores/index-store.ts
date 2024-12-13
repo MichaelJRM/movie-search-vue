@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {ResultType} from '~/util/data/result';
-import {type MovieSearch} from '~/models/movie/entity/movie'
+import type {MovieSearch} from '~/models/movie/entity/movie';
 
 const minSearchPaginationPage: number = 1;
 const maxSearchPaginationPage: number = 100;

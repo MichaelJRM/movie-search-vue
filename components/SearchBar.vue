@@ -16,7 +16,7 @@
                         name="search"
                         placeholder="Search for a movie by title"
                         type="text"
-                        @input="$emit('newSearchQuery', $event.target.value)"
+                        @input="$emit('newSearchQuery', $event.target?.value ?? '')"
                 >
                 <span class="absolute inset-y-0 right-0 flex items-center pr-2 py-2">
                      <button v-if="searchQuery"
@@ -37,7 +37,7 @@
                     class="rounded-md border border-zinc-700 focus:border-zinc-200 focus:outline-none
                     focus-visible:ring-0 active:border-zinc-700 active:enabled:hover:border-zinc-700 bg-zinc-800 text-white grow sm:w-32"
                     title="Filter by year of release"
-                    @input="$emit('newYearOfRelease', $event.target.value)"
+                    @input="$emit('newYearOfRelease', $event.target?.value ?? '')"
             >
                 <option value="">All years</option>
                 <option v-for="year in generateAvailableYears()" :key="year" :value="year">{{ year }}</option>

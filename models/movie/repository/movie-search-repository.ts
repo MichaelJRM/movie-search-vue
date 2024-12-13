@@ -2,6 +2,7 @@ import MovieSearchApi from '~/models/movie/repository/api/movie-search-api';
 import {Paged} from '~/util/data/paged';
 import RepositoryApiResultHandler from '~/util/repository/error-handler';
 import type {Result} from '~/util/data/result';
+import type {MovieSearch, MovieDetails} from '~/models/movie/entity/movie';
 
 export default class MovieSearchRepository {
   constructor(private readonly api: MovieSearchApi) {

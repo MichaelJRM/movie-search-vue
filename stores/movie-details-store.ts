@@ -1,12 +1,14 @@
 import {defineStore} from 'pinia';
 import {ResultType} from '~/util/data/result';
+import type {MovieDetails} from '~/models/movie/entity/movie';
 
 export const useMovieDetailsStore = defineStore('movie-details', () => {
   const {$useCase} = useNuxtApp();
+
   const movieDetails = ref<MovieDetails>();
   const isLoading = ref<boolean>(false);
   const queryError = ref<string>('');
-  let criticalError = ref<string>('');
+  const criticalError = ref<string>('');
 
   const getMovieDetails = computed<MovieDetails | undefined>(() => movieDetails.value);
   const getIsLoading = computed<boolean>(() => isLoading.value);

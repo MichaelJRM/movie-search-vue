@@ -40,6 +40,7 @@ import Modal from '~/components/Modal.vue';
 import DialogError from '~/components/dialog/Error.vue';
 import loadImageAsset from '~/util/common/load-image-asset';
 import {storeToRefs} from 'pinia';
+import type {MovieSearch} from '~/models/movie/entity/movie';
 
 const props = defineProps<{ movie: MovieSearch }>();
 const {isMobile} = useDevice();

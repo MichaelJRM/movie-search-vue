@@ -1,6 +1,7 @@
 import MovieSearchRepository from '~/models/movie/repository/movie-search-repository';
 import {Paged} from '~/util/data/paged';
-import {Result} from '~/util/data/result';
+import type {Result} from '~/util/data/result';
+import type {MovieSearch, MovieDetails} from '~/models/movie/entity/movie';
 
 export default class MovieSearchUseCase {
   constructor(private readonly repository: MovieSearchRepository) {

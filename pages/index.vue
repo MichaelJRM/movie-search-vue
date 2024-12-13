@@ -46,7 +46,7 @@ const dialogError = ref<InstanceType<typeof DialogError> | null>(null);
 const videosContainerDynamicClasses = ref<string[]>([]);
 const videosContainerCSSAnimationClasses = ['translate-y-[500%]', 'duration-700'];
 const videosContainerDefaultCSSAnimationClasses = ['translate-y-0', 'duration-700'];
-let searchTimeout: NodeJS.Timeout;
+let searchTimeout: ReturnType<typeof setTimeout>;
 const searchTimeoutInMs = 700;
 const {getCriticalError, getCurrentPageNumber, getSearchQuery, getYearOfRelease} = storeToRefs(store);
 const router = useRouter();

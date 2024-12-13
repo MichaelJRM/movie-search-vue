@@ -1,5 +1,5 @@
 import MovieSearchApi from '~/models/movie/repository/api/movie-search-api';
-import {FetchOptions} from 'ohmyfetch';
+import type {FetchOptions} from 'ohmyfetch';
 
 interface IApiInstance {
   movie: MovieSearchApi;
@@ -14,6 +14,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   };
 
+  // @ts-ignore
   const apiFetcher = $fetch.create(fetchOptions);
   const modules: IApiInstance = {
     // @ts-ignore

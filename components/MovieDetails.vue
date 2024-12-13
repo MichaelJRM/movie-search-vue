@@ -55,6 +55,7 @@
 <script lang="ts" setup>
 import {mobileBreakpoint} from '~/util/data/screen-break-points';
 import loadImageAsset from '~/util/common/load-image-asset';
+import type {MovieDetails} from '~/models/movie/entity/movie';
 
 const props = defineProps<{
   movieDetails: MovieDetails | undefined;

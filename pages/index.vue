@@ -21,7 +21,7 @@
              class="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,_minmax(200px,280px))] gap-2 sm:gap-4 mt-8 z-10
              mb-32 w-full justify-center"
         >
-            <MovieThumbnail v-for="(movie, index) in store.getMovies" :key="index" :movie="movie"/>
+            <MovieThumbnail v-for="movie in store.getMovies" :key="movie.imdbID" :movie="movie"/>
         </div>
         <div v-if="store.getIsLoading"
              class="grid place-items-center absolute top-1/2 left-1/2 text-white -translate-x-1/2 translate-y-1/2">

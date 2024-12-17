@@ -1,4 +1,4 @@
-import {$Fetch} from 'ohmyfetch';
+import type {$Fetch} from 'ohmyfetch';
 
 export default class HttpFactory {
   private readonly $fetch: $Fetch;
